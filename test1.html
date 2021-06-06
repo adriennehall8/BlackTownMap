@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <title>Mapping Black Towns</title>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+        integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+        crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+        integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+        crossorigin=""></script>
+        <script src="./data/BlackTowns.js" ></script>
+    </head>
+    <style>
+        body {
+        background-color: rgb(18,18,18);
+        padding-top: 1%;
+        padding-bottom: 1%;
+        padding-left: 1.5%;
+        padding-right: 1.5%;
+    }
+
+    h1 {
+        font-family:'Gill Sans', sans-serif;
+        font-weight: normal;
+        font-size: 28pt;
+        color:rgb(255,255,255);
+        cursor: text;
+        position: relative;
+        text-align: center;
+    }         
+    </style>
+    
+    <body>
+        <h1>Mapping Black Towns</h1>
+        
+    <div id="mapid"></div>
+    <style>
+        #mapid{ width: 100%; height: 100%; }
+    </style>
+    <script>  
+
+    var map = L.map('mapid').setView([44.967243, -103.771556], 4); 
+
+    var CartoDB_DarkMatter = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            minZoom: 2,
+            maxZoom: 19
+        }).addTo(map);
+    
+    var myIcon = L.icon({ 
+        iconUrl: 'https://cdn1.iconfinder.com/data/icons/web-55/32/web_1-512.png',   
+        iconSize: [25,25],
+        popupAnchor: [0,0]
+    });
+    
+    // function myPopUp(i){
+    //     var popup = towns.features[i].properties.TownName +
+    //         '<br/><b>State:</b> ' + towns.features[i].properties.State +
+    //         '<br/><b>Year Established:</b> ' + towns.features[i].properties.Established +
+    //         '<br/><b>Existing?:</b> ' + towns.features[i].properties.Existing +
+    //         '<br/><b>Incorporated?:</b> ' + towns.features[i].properties.Incorporated;
+    //     return popup;
+    // }
+
+    L.geoJSON(towns, {
+        pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, {icon:myIcon});
+        },
+        onEachFeature: function(feature, layer){
+        //console.log(feature.properties);
+        content = "<br/><b>Town Name:</b>" + feature.properties.TownName + "<br/><b>State:</b> " + feature.properties.State + "<br/><b>Year Established:</b> " + feature.properties.Established + "<br/><b>Existing?:</b> " + feature.properties.Existing + "<br/><b>Incorporated?:</b> " + feature.properties.Incorporated; 
+        layer.bindPopup(content);
+        }
+    }).addTo(map);
+    </script>
+    </body>
+</html>

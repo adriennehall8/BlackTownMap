@@ -85,9 +85,29 @@
 
         var markers = L.markerClusterGroup();
 
-		var geoJsonLayer = L.geoJson(towns, {
+		// var geoJsonLayer = L.geoJson(towns, {
+        //     pointToLayer: function (feature, latlng) {
+        //     return L.marker(latlng, {icon:redIcon});
+        //     },
+		// 	onEachFeature: function (feature, layer) {
+        //         content = "<br/><b>Town Name:</b> " + feature.properties.TownName + "<br/><b>State:</b> " + feature.properties.State + "<br/><b>Year Established:</b> " + feature.properties.Established + "<br/><b>Existing?:</b> " + feature.properties.Existing + "<br/><b>Incorporated?:</b> " + feature.properties.Incorporated; 
+        //         layer.bindPopup(content);
+		// 		// layer.bindPopup(feature.properties.TownName);
+		// 	}
+		// });
+        
+        var geojsonMarkerOptions = {
+            radius: 6,
+            fillColor: "#00FFFF",
+            color: "#778899",
+            weight: 4,
+            opacity: 1,
+            fillOpacity: 0.8
+        };
+
+        var geoJsonLayer = L.geoJson(towns, {
             pointToLayer: function (feature, latlng) {
-            return L.marker(latlng, {icon:redIcon});
+            return L.circleMarker(latlng, geojsonMarkerOptions);
             },
 			onEachFeature: function (feature, layer) {
                 content = "<br/><b>Town Name:</b> " + feature.properties.TownName + "<br/><b>State:</b> " + feature.properties.State + "<br/><b>Year Established:</b> " + feature.properties.Established + "<br/><b>Existing?:</b> " + feature.properties.Existing + "<br/><b>Incorporated?:</b> " + feature.properties.Incorporated; 
@@ -95,7 +115,7 @@
 				// layer.bindPopup(feature.properties.TownName);
 			}
 		});
-        
+
         //made using https://github.com/Leaflet/Leaflet.markercluster/blob/master/example/geojson.html
 		markers.addLayer(geoJsonLayer);
 

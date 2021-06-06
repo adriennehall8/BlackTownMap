@@ -5,7 +5,10 @@
         crossorigin=""/>
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
         crossorigin=""></script>
-
+        <!-- Leaflet Cluster Files -->
+        <link rel="stylesheet" href="./dist/MarkerCluster.css" />
+        <link rel="stylesheet" href="./dist/MarkerCluster.Default.css" />
+        <script src="./dist/leaflet.markercluster-src.js"></script>
         <!-- Black Towns data -->
         <script src="./data/BlackTowns.js" ></script>
         <!-- state boundaries geojson -->
@@ -53,20 +56,15 @@
 
         var redIcon = L.icon({ 
             iconUrl: 'https://cdn3.iconfinder.com/data/icons/facebook-ui-flat/48/Facebook_UI-06-512.png',   
-            iconSize: [25,25],
+            iconSize: [50,50],
             popupAnchor: [0,0]
         });
 
-        var geojson = L.geoJSON(towns, {
-            pointToLayer: function (feature, latlng) {
-            return L.marker(latlng, {icon:redIcon});
-            },
-            onEachFeature: function(feature, layer){
-            //console.log(feature.properties);
-            content = "<br/><b>Town Name:</b> " + feature.properties.TownName + "<br/><b>State:</b> " + feature.properties.State + "<br/><b>Year Established:</b> " + feature.properties.Established + "<br/><b>Existing?:</b> " + feature.properties.Existing + "<br/><b>Incorporated?:</b> " + feature.properties.Incorporated; 
-            layer.bindPopup(content);
-            }
-        }).addTo(map);
+        var blackIcon = L.icon({
+            iconUrl: 'https://cdn4.iconfinder.com/data/icons/user-interface-glyph-5/32/Location-512.png',
+            iconSize: [25,25],
+            popupAnchor: [0,0]
+        })
 
         var polygonStyle = {
             "color": "#C0C0C0",
@@ -82,9 +80,27 @@
         };
         
         var overlayMaps = {
-            "State boundaries": states,
-            "Black Towns": geojson
+            "State boundaries": states
         };
+
+        var markers = L.markerClusterGroup();
+
+		var geoJsonLayer = L.geoJson(towns, {
+            pointToLayer: function (feature, latlng) {
+            return L.marker(latlng, {icon:redIcon});
+            },
+			onEachFeature: function (feature, layer) {
+                content = "<br/><b>Town Name:</b> " + feature.properties.TownName + "<br/><b>State:</b> " + feature.properties.State + "<br/><b>Year Established:</b> " + feature.properties.Established + "<br/><b>Existing?:</b> " + feature.properties.Existing + "<br/><b>Incorporated?:</b> " + feature.properties.Incorporated; 
+                layer.bindPopup(content);
+				// layer.bindPopup(feature.properties.TownName);
+			}
+		});
+        
+        //made using https://github.com/Leaflet/Leaflet.markercluster/blob/master/example/geojson.html
+		markers.addLayer(geoJsonLayer);
+
+		map.addLayer(markers);
+		map.fitBounds(markers.getBounds());
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
 

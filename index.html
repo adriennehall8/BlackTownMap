@@ -117,6 +117,7 @@
             "State boundaries": states
         };
 
+        //minor glitch in the layer controls, if you select and unselect the unclustered towns then the single towns disappear from the cluster map. They reappear if you unselect and reselect the clustered layer.
         L.control.layers(baseMaps, overlayMaps).addTo(map);
 
         L.control.scale().addTo(map);

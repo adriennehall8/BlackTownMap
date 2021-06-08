@@ -54,18 +54,6 @@
             maxZoom: 19
         });
 
-        var redIcon = L.icon({ 
-            iconUrl: 'https://cdn3.iconfinder.com/data/icons/facebook-ui-flat/48/Facebook_UI-06-512.png',   
-            iconSize: [50,50],
-            popupAnchor: [0,0]
-        });
-
-        var blackIcon = L.icon({
-            iconUrl: 'https://cdn4.iconfinder.com/data/icons/user-interface-glyph-5/32/Location-512.png',
-            iconSize: [25,25],
-            popupAnchor: [0,0]
-        })
-
         var polygonStyle = {
             "color": "#C0C0C0",
             "weight": 1,
@@ -73,18 +61,10 @@
         };
 
         var states = L.geoJSON(states, {style:polygonStyle});
-        
-        var baseMaps = {
-            "Gray Canvas": Esri_WorldGrayCanvas,
-            "Dark Matter": CartoDB_DarkMatter
-        };
-        
-        var overlayMaps = {
-            "State boundaries": states
-        };
 
         var markers = L.markerClusterGroup();
 
+        //this code uses the L.marker function and overrides the default marker with icon variables created above
 		// var geoJsonLayer = L.geoJson(towns, {
         //     pointToLayer: function (feature, latlng) {
         //     return L.marker(latlng, {icon:redIcon});
@@ -96,6 +76,7 @@
 		// 	}
 		// });
         
+        //made using https://stackoverflow.com/questions/25364072/how-to-use-circle-markers-with-leaflet-tilelayer-geojson
         var geojsonMarkerOptions = {
             radius: 6,
             fillColor: "#00FFFF",
@@ -105,6 +86,7 @@
             fillOpacity: 0.8
         };
 
+        //this code uses the L.circleMarker feature to reduce any potential issues with sourcing an icon url from the web and to avoid uploading a file with the marker icon
         var geoJsonLayer = L.geoJson(towns, {
             pointToLayer: function (feature, latlng) {
             return L.circleMarker(latlng, geojsonMarkerOptions);
@@ -116,11 +98,24 @@
 			}
 		});
 
-        //made using https://github.com/Leaflet/Leaflet.markercluster/blob/master/example/geojson.html
-		markers.addLayer(geoJsonLayer);
+        //made using a modified version of this code https://github.com/Leaflet/Leaflet.markercluster/blob/master/example/geojson.html
+		//storing the marker clusters as a variable so that it can be added to layer controls
+        var clusteredMarkers = markers.addLayer(geoJsonLayer);
 
+        //this makes it so that the clusters are on the map upon opening the webpage
 		map.addLayer(markers);
-		map.fitBounds(markers.getBounds());
+		//map.fitBounds(markers.getBounds());
+
+        var baseMaps = {
+            "Gray Canvas": Esri_WorldGrayCanvas,
+            "Dark Matter": CartoDB_DarkMatter
+        };
+
+        var overlayMaps = {
+            "Black Towns": geoJsonLayer,
+            "Black Towns (clustered)": clusteredMarkers,
+            "State boundaries": states
+        };
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
 

@@ -13,15 +13,19 @@
         <script src="./data/BlackTowns.js" ></script>
         <!-- state boundaries geojson -->
         <script src="./data/states_5m.js" ></script>
-
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     </head>
     <style>
         body {
             background-color:black;
-            padding-top: 1%;
-            padding-bottom: 1%;
-            padding-left: 1.5%;
-            padding-right: 1.5%;
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        html, body, #mapid {
+            height: 100%;
+            width: 100vw;
         }
 
         h1 {

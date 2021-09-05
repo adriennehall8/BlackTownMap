@@ -1,0 +1,146 @@
+body {
+    background-color: midnightblue;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+h1 {
+    font-family:'Geneva';
+    font-weight: lighter;
+    font-size: 28pt;
+    letter-spacing: 3px;
+    color:whitesmoke;
+    cursor: text;
+    position: relative;
+    text-align: center;
+}
+h4 {
+    font-family: 'Geneva';
+    font-weight: lighter;
+    font-size: 12pt;
+    color: white;
+}
+
+/* tooltip styling from https://stackoverflow.com/questions/59728027/leaflet-styling-a-tooltip  */
+.leaflet-tooltip-left:before {
+    right: 0;
+    margin-right: -12px;
+    border-left-color: rgba(0, 0, 0, 0.4);
+}
+.leaflet-tooltip-right:before {
+    left: 0;
+    margin-left: -12px;
+    border-right-color: rgba(0, 0, 0, 0.4);
+    }
+.leaflet-tooltip-own {
+    position: absolute;
+    padding: 4px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 0px solid #000;
+    color: #000;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+/* style for panel pop-up from http://www.gistechsolutions.com/leaflet/DEMO/baseball/BaseballPanel.html */
+
+#wrapper {
+    margin: 0 auto;
+    width: 100%;
+}
+  
+#panel {
+    float: left;
+    width: 100%;
+    height:50px;
+    background-color: midnightblue;
+    color:black;
+}
+  
+#mapid {
+    float: left;
+    width: 80%;
+    height:600px;
+}
+  
+.sidebar {
+    float: left;
+    width: 20%;
+    height:600px;
+    background-color: white;
+    color: black;
+}
+  
+#footer {
+    float: left;
+    background-color: #175B81;
+    color: white;
+    width: 100%;
+    height:25px
+}
+  
+.text-labels     {
+    font-weight: bold;
+    color:#006400;
+    font-family: "Arial Black";
+    font-size: 20px ;
+    line-height:25px;
+    text-align:center;
+}
+     
+table, th, td 
+{
+    margin:0px 5px;
+    /*border:solid 1px #333; */
+    padding:2px 4px;
+    font:10px Verdana;
+}
+
+th {
+    font-size:14px;
+    font-weight:bold
+}
+
+td {
+    font-size:14px;
+    font-weight:normal
+}
+
+tr {
+    background: white;
+}
+      
+tbody  tr:hover {
+    background: yellow;
+    }
+
+table {
+        border-collapse: collapse;
+}  
+
+.table a {
+    display:block;
+    text-decoration:none;
+}
+
+#f1{
+    font-weight:bold
+}
+
+.p2 {
+    font-family:'Geneva';
+    font-weight: lighter;
+    font-size: 28pt;
+    letter-spacing: 3px;
+    color:whitesmoke;
+    cursor: text;
+    position: relative;
+    text-align: center;
+}  

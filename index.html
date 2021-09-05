@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="./dist/MarkerCluster.Default.css" />
         <script src="./dist/leaflet.markercluster-src.js"></script>
         <!-- Black Towns data -->
-        <script src="./data/BlackTowns.js" ></script>
+        <script src="./data/BlackTowns_05SEP21.js" ></script>
         <!-- state boundaries geojson -->
         <script src="./data/states_5m.js" ></script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -58,13 +58,27 @@
             maxZoom: 19
         });
 
-        var polygonStyle = {
-            "color": "#C0C0C0",
-            "weight": 1,
-            "opacity": 0.5
-        };
+        // var polygonStyle = {
+        //     "color": "#C0C0C0",
+        //     "weight": 1,
+        //     "opacity": 0.5
+        // };
 
-        var states = L.geoJSON(states, {style:polygonStyle});
+        // var states = L.geoJSON(states, {style:polygonStyle});
+        //adds label on hover to state boundaries layer
+        var STATES = L.geoJson(states, {
+            style: function (feature) {
+                return{
+                color: "#C0C0C0",
+                weight: 1,
+                opacity: 0.5
+                };
+            },
+            onEachFeature: function (feature, layer){
+                layer.bindTooltip(feature.properties.NAME)
+            }
+        });
+        
 
         var markers = L.markerClusterGroup();
 
@@ -91,14 +105,14 @@
         };
 
         //this code uses the L.circleMarker feature to reduce any potential issues with sourcing an icon url from the web and to avoid uploading a file with the marker icon
-        var geoJsonLayer = L.geoJson(towns, {
+        var geoJsonLayer = L.geoJson(BlackTowns, {
             pointToLayer: function (feature, latlng) {
             return L.circleMarker(latlng, geojsonMarkerOptions);
             },
 			onEachFeature: function (feature, layer) {
-                content = "<br/><b>Town Name:</b> " + feature.properties.TownName + "<br/><b>State:</b> " + feature.properties.State + "<br/><b>Year Established:</b> " + feature.properties.Established + "<br/><b>Existing?:</b> " + feature.properties.Existing + "<br/><b>Incorporated?:</b> " + feature.properties.Incorporated; 
+                content = "<br/><b>Town Name:</b> " + feature.properties.Name + "<br/><b>State:</b> " + feature.properties.State + "<br/><b>Year Established:</b> " + feature.properties.Established + "<br/><b>Existing:</b> " + feature.properties.Existing + "<br/><b>Incorporated:</b> " + feature.properties.Incorporated + "<br/><b>Summary:</b> " + feature.properties.Summary; 
                 layer.bindPopup(content);
-				// layer.bindPopup(feature.properties.TownName);
+				// layer.bindPopup(feature.properties.Name);
 			}
 		});
 
@@ -118,7 +132,7 @@
         var overlayMaps = {
             "Black Towns": geoJsonLayer,
             "Black Towns (clustered)": clusteredMarkers,
-            "State boundaries": states
+            "State boundaries": STATES
         };
 
         //minor glitch in the layer controls, if you select and unselect the unclustered towns then the single towns disappear from the cluster map. They reappear if you unselect and reselect the clustered layer.

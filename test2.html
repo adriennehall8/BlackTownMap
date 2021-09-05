@@ -1,0 +1,158 @@
+<html>
+    <head>
+        <title>Black Town Map</title>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin=""/>
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+        <!-- Leaflet Cluster Files -->
+        <link rel="stylesheet" href="./dist/MarkerCluster.css" />
+        <link rel="stylesheet" href="./dist/MarkerCluster.Default.css" />
+        <script src="./dist/leaflet.markercluster-src.js"></script>
+        <!-- Black Towns data -->
+        <script src="./data/BlackTowns.js" ></script>
+        <!-- state boundaries geojson -->
+        <script src="./data/states_5m.js" ></script>
+        <link rel="stylesheet" href="./style.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    </head>
+    <style></style>
+    <body>
+        <div id="wrapper">
+            <div id="panel">
+                <span class="p2">MAPPING BLACK TOWNS</span>
+            </div>
+            <div id="mapid" class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0" style="position: relative; outline: none;">
+                <div class="leaflet-pane leaflet-mmap-pane" style="transform:translate3d(0px, 0px, 0px);">
+                    <div class="leaflet-pane leaflet-tile-pane">
+                        <!-- this section is not complete -->
+                    </div>
+                    <div class="leaflet-pane leaflet-overlay-pane">
+                        <!-- this section is not complete -->
+                    </div>
+                    <div class="leaflet-pane leaflet-marker-pane"></div>
+                    <div class="leaflet-pane leaflet-tooltip-pane"></div>
+                    <div class="leaflet-pane leaflet-popup-pane"></div>
+                    <div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(930.02px, 1565.41px, 0px) scale(8);"></div>
+                </div>
+                <div class="leaflet-control-container">
+
+                </div>
+            </div>
+            <div class="sidebar">
+                <p style="text-align:center; font-size: 24px; color:#175B81; font-weight:bold;">Black Town Details</p>
+                <table style="width:90%;">
+                    <tbody>
+                        <tr> 
+                            <td id="pict" align="center";></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <br>
+                <table style="width:90%">
+                    <tbody>
+                        <tr>
+                            <th align="left">Name:</th>
+                            <td id="f1"></td>
+                        </tr>
+                        <tr>
+                            <th align="left">State:</th>
+                            <td id="f1"></td>
+                        </tr>
+                        <tr>
+                            <th align="left">Established:</th>
+                            <td id="f1"></td>
+                        </tr>
+                        <tr>
+                            <th align="left">Existing:</th>
+                            <td id="f1"></td>
+                        </tr>
+                        <tr>
+                            <th align="left">Incorporated:</th>
+                            <td id="f1"></td>
+                        </tr>
+                        <tr>
+                            <th align="left">Summary:</th>
+                            <td id="f1"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="footer"></div>
+
+        </div>
+        
+    <script>  
+        var map = L.map('mapid', {attributionControl: false}).setView([44.967243, -103.771556], 4); 
+        
+        var monoTiles = L.tileLayer('https://api.mapbox.com/styles/v1/antievictionmap/ckquafbi91n3c18qb2o71uyjf/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYW50aWV2aWN0aW9ubWFwIiwiYSI6ImNrazF6dWs2ZzA2OHQyd251eGxoc2IyYzQifQ.lQbeWzEMZhhvSNpsbo34wQ').addTo(map);
+        
+        //adds label on hover to state boundaries layer
+        var STATES = L.geoJson(states, {
+            style: function (feature) {
+                return{
+                color: "#C0C0C0",
+                weight: 1,
+                opacity: 0.5
+                };
+            },
+            onEachFeature: function (feature, layer){
+                layer.bindTooltip("<div style='background:white; padding:1px 3px 1px 3px; font-family:Geneva'><b>" + feature.properties.NAME + "</b></div>",
+                {
+                    direction: 'right',
+                    permanent: false,
+                    sticky: true,
+                    offset: [10, 0],
+                    opacity: 0.75,
+                    className: 'leaflet-tooltip-own'
+                }
+                    )
+            }
+        });
+        
+        var markers = L.markerClusterGroup();
+        
+        //made using https://stackoverflow.com/questions/25364072/how-to-use-circle-markers-with-leaflet-tilelayer-geojson
+        var geojsonMarkerOptions = {
+            radius: 5,
+            fillColor: "#FCAE56",
+            color: "#FCAE56",
+            weight: 2.5,
+            opacity: 1,
+            fillOpacity: 0.8
+        };
+
+        //this code uses the L.circleMarker feature to reduce any potential issues with sourcing an icon url from the web and to avoid uploading a file with the marker icon
+        var geoJsonLayer = L.geoJson(towns, {
+            pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, geojsonMarkerOptions);
+            },
+			onEachFeature: function (feature, layer) {
+                content = "<br/><b>Town Name:</b> " + feature.properties.TownName + "<br/><b>State:</b> " + feature.properties.State + "<br/><b>Year Established:</b> " + feature.properties.Established + "<br/><b>Existing?:</b> " + feature.properties.Existing + "<br/><b>Incorporated?:</b> " + feature.properties.Incorporated; 
+                layer.bindPopup(content);
+				// layer.bindPopup(feature.properties.TownName);
+			}
+		});
+
+        //made using a modified version of this code https://github.com/Leaflet/Leaflet.markercluster/blob/master/example/geojson.html
+		//storing the marker clusters as a variable so that it can be added to layer controls
+        var clusteredMarkers = markers.addLayer(geoJsonLayer);
+
+        //this makes it so that the clusters are on the map upon opening the webpage
+		map.addLayer(markers);
+
+        var overlayMaps = {
+            "Black Towns": geoJsonLayer,
+            "Black Towns (clustered)": clusteredMarkers,
+            "State boundaries": STATES
+        };
+
+        //minor glitch in the layer controls, if you select and unselect the unclustered towns then the single towns disappear from the cluster map. They reappear if you unselect and reselect the clustered layer.
+        L.control.layers(overlayMaps).addTo(map);
+
+        L.control.scale().addTo(map);
+
+    </script>
+    </body>
+</html>
